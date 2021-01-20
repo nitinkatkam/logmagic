@@ -6,7 +6,7 @@ from socket import gethostname
 from time import tzname
 from platform import platform
 from getpass import getuser
-from os import getpid, getcwd, getuid
+from os import getpid, getcwd  #, getuid  # GetUid doesn't exist on Windows
 
 
 class MongoHandler(logging.Handler):
