@@ -1,9 +1,22 @@
 import logging
+from logging import Logger
 import sys
 
 
-def make_logger(a_name='Default Logger', type='console', file_path='./example.log', mongodb_uri='mongodb://127.0.0.1:27017', kafka_bootstrap_servers=['localhost:9092'], kafka_topic='logs'):
-    objLogger = logging.getLogger(a_name)
+def make_logger(name: str='Default Logger', type: str='console', file_path: str='./example.log', mongodb_uri: str='mongodb://127.0.0.1:27017', kafka_bootstrap_servers: str=['localhost:9092'], kafka_topic: str='logs') -> Logger:
+    """
+    Creates a logger instance
+    :param str name: The name of the logger
+    :param str type: The type of logger (console, mongo, file, kafka)
+    :param str file_path: Location of the log file
+    :param str mongodb_uri: URI to the MongoDB database
+    :param str kafka_bootstrap_servers: Kafka server
+    :param str kafka_topic: Kafka topic
+    :return: The logger object
+    :rtype: Logger
+    :raises Exception: if the type is invalid
+    """
+    objLogger: Logger = logging.getLogger(name)
     objLogger.setLevel(logging.DEBUG)
 
     if type != 'console':
@@ -17,7 +30,7 @@ def make_logger(a_name='Default Logger', type='console', file_path='./example.lo
     if type == 'console':
         lh = logging.StreamHandler()
     elif type == 'file':
-        lh = logging.FileHandler(file_path) #'/home/kafka/KafkaConsumer.log')
+        lh = logging.FileHandler(file_path)  # '/home/kafka/KafkaConsumer.log')
     elif type == 'mongo':
         # log4mongo  # Buggy
         # from log4mongo.handlers import MongoHandler
@@ -34,7 +47,7 @@ def make_logger(a_name='Default Logger', type='console', file_path='./example.lo
 
         # Custom handler
         # sys.path.insert(0, dir(__file__))
-        from util.MongoHandler import MongoHandler
+        from logmagic.MongoHandler import MongoHandler
         lh = MongoHandler(mongodb_uri=mongodb_uri)
     elif type == 'kafka':
         # TODO Test a pre-built handler and pass kafka_bootstrap_servers and kafka_topic
